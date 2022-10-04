@@ -1,18 +1,17 @@
 import os
-from typing import Optional, List
+from typing import List, Optional
 
 import torch
-from torch import autocast
-from diffusers import PNDMScheduler, LMSDiscreteScheduler
-from PIL import Image
 from cog import BasePredictor, Input, Path
+from diffusers import LMSDiscreteScheduler, PNDMScheduler
+from PIL import Image
+from torch import autocast
 
 from image_to_image import (
     StableDiffusionImg2ImgPipeline,
     preprocess_init_image,
     preprocess_mask,
 )
-
 
 MODEL_CACHE = "diffusers-cache"
 
@@ -115,8 +114,6 @@ class Predictor(BasePredictor):
             generator=generator,
             num_inference_steps=num_inference_steps,
         )
-        if any(output["nsfw_content_detected"]):
-            raise Exception("NSFW content detected, please try a different prompt")
 
         output_paths = []
         for i, sample in enumerate(output["sample"]):
